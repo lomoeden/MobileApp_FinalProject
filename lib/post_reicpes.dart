@@ -1,10 +1,12 @@
 
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
-import 'display_post.dart';
+import 'package:mobile_app_final_project/display_post.dart';
 import 'login.dart';
+import 'package:mobile_app_final_project/user.dart' as u;
+
 
 class postRecipes extends StatelessWidget {
   // postRecipes({
@@ -17,7 +19,18 @@ class postRecipes extends StatelessWidget {
   final _post = TextEditingController();
   final _title = TextEditingController();
   final _image = TextEditingController();
-  late final String recipes;
+  final _name = TextEditingController();
+
+  // List<u.User> user = [];
+  // void getUsername() {
+  //   _db.collection('users')
+  //       .doc(FirebaseAuth.instance.currentUser!.uid)
+  //       .get()
+  //       .then((DocumentSnapshot doc) {
+  //           user.add(u.User.fromJson(doc.id, doc.data() as Map<String, dynamic>));
+  //       });
+  //   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +38,6 @@ class postRecipes extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Post Your Recipes"),
-        backgroundColor: const Color(0xff9e9e9e),
       ),
       body: Center(
         child:
@@ -55,12 +67,12 @@ class postRecipes extends StatelessWidget {
                   child:
                   TextField(
                     autofocus: true,
-                    controller: _post,
+                    controller: _name,
                     decoration: const InputDecoration(
                       focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(color:Colors.grey,width:2.0),
                       ),
-                      hintText: 'Enter your post here...',
+                      hintText: 'Enter your name here...',
                     ),
                     keyboardType: TextInputType.multiline,
                     maxLines: null,
@@ -82,18 +94,34 @@ class postRecipes extends StatelessWidget {
                     maxLines: null,
                   )
               ),
-              Container(
-                margin: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => login()));
-                    },
-                    child: const Text("Upload Image")
-                ),
+              Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child:
+                  TextField(
+                    autofocus: true,
+                    controller: _post,
+                    decoration: const InputDecoration(
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color:Colors.grey,width:2.0),
+                      ),
+                      hintText: 'Enter your post here...',
+                    ),
+                    keyboardType: TextInputType.multiline,
+                    maxLines: null,
+                  )
               ),
+              // Container(
+              //   margin: const EdgeInsets.symmetric(horizontal: 8.0),
+              //   child: ElevatedButton(
+              //       onPressed: () {
+              //         Navigator.push(
+              //             context,
+              //             MaterialPageRoute(
+              //                 builder: (context) => login()));
+              //       },
+              //       child: const Text("Upload Image")
+              //   ),
+              // ),
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: ElevatedButton(
@@ -110,7 +138,7 @@ class postRecipes extends StatelessWidget {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => displayPost(recipes:recipes, user_id: current_user!.uid)));
+                              builder: (context) => displayPost(user_id: current_user!.uid)));
                     },
                     child: const Text("View Posts")
                 ),
@@ -133,12 +161,14 @@ class postRecipes extends StatelessWidget {
           .set({
         "title": _title.text,
         "post": _post.text,
+        "name": _name.text,
         "image": _image.text,
         "time_created": Timestamp.now(),
       });
       _post.clear();
       _title.clear();
       _image.clear();
+      _name.clear();
     } on FirebaseException catch (e) {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text(e.message ?? "Unknown Error")));

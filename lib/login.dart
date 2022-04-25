@@ -18,7 +18,6 @@ class login extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           title: Text("Login"),
-          // backgroundColor: const Color(0xff9e9e9e),
         ),
         body: Center(
           child: Form(
@@ -28,9 +27,13 @@ class login extends StatelessWidget {
                   TextFormField(
                     controller: _email,
                     decoration: const InputDecoration(
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color:Colors.grey,width:2.0),
+                      ),
                       hintText: "Enter Email",
                     ),
                   ),
+
                   TextFormField(
                     controller: _password,
                     obscureText: true,
@@ -42,6 +45,9 @@ class login extends StatelessWidget {
                       }
                     },
                     decoration: const InputDecoration(
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color:Colors.grey,width:2.0),
+                        ),
                       hintText: "Enter Password",
                     ),
                   ),
@@ -77,6 +83,9 @@ class login extends StatelessWidget {
       }
       return;
     }
+    _email.clear();
+    _password.clear();
+
     Navigator.push(
         context,
         MaterialPageRoute(

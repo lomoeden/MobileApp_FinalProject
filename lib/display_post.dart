@@ -2,12 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:mobile_app_final_project/post.dart';
+import 'package:mobile_app_final_project/user.dart' as u;
+import 'package:webview_flutter/webview_flutter.dart';
 
 
 class displayPost extends StatelessWidget {
   displayPost({
-    required this.recipes, required this.user_id,
+    required this.user_id,
   });
 
   final FirebaseFirestore _db = FirebaseFirestore.instance;
@@ -15,7 +16,6 @@ class displayPost extends StatelessWidget {
       "posts");
   final _message = TextEditingController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final String recipes;
   final String user_id;
 
   @override
@@ -26,9 +26,9 @@ class displayPost extends StatelessWidget {
         ),
         body: StreamBuilder(
             stream: _db
-                .collection('posts')
-                .doc(recipes)
-                .collection(user_id)
+                .collection('user')
+                .doc("user_id")
+                .collection("posts")
                 .snapshots(),
             builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
               if (snapshot.hasError) {
@@ -49,9 +49,12 @@ class displayPost extends StatelessWidget {
                       itemCount: snapshot.data!.docs.length,
                       itemBuilder: (BuildContext context, int index){
                         DocumentSnapshot doc = snapshot.data!.docs[index];
-                        Post post = Post.fromJson(doc.data() as Map<String, dynamic>);
-                        String currPost = post.post;
-                        return Text(currPost);
+                        u.User post = u.User.fromJson(doc.id, doc.data() as Map<String, dynamic>);
+                        // String posts = post.post;
+                        return ListTile(
+                            title: Text(post.post),
+                        subtitle: Text(post.username),
+                        );
                       });
                 }
               } else {
@@ -61,16 +64,16 @@ class displayPost extends StatelessWidget {
     );
   }
 
-  List<Post> post = [];
+  List<u.User> post = [];
   void getStreams() async {
-    _db.collection("posts")
-        .doc(recipes)
-        .collection(user_id)
+    _db.collection("users")
+        .doc(user_id)
+        .collection("posts")
         .snapshots()
         .listen((QuerySnapshot<Map<String, dynamic>> snapshot) {
       snapshot.docs.map((QueryDocumentSnapshot doc) {
         post.add(
-            Post.fromJson(doc.data() as Map<String, dynamic>));
+            u.User.fromJson(doc.id, doc.data() as Map<String, dynamic>));
       });
     });
   }

@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:mobile_app_final_project/login.dart';
 
-import 'login.dart';
 
 class SignUpPage extends StatelessWidget {
   SignUpPage({Key? key}) : super(key: key);
@@ -18,7 +18,6 @@ class SignUpPage extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           title: Text("Register"),
-          backgroundColor: const Color(0xff9e9e9e),
         ),
         body: Center(
           child: Form(
@@ -29,12 +28,18 @@ class SignUpPage extends StatelessWidget {
                     controller: _username,
                     validator: (String? value) {},
                     decoration: const InputDecoration(
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color:Colors.grey,width:2.0),
+                      ),
                       hintText: "Enter User Name",
                     ),
                   ),
                   TextFormField(
                     controller: _email,
                     decoration: const InputDecoration(
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color:Colors.grey,width:2.0),
+                      ),
                       hintText: "Enter Email",
                     ),
                   ),
@@ -50,6 +55,9 @@ class SignUpPage extends StatelessWidget {
                       }
                     },
                     decoration: const InputDecoration(
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color:Colors.grey,width:2.0),
+                      ),
                       hintText: "Enter Password",
                     ),
                   ),
@@ -62,6 +70,9 @@ class SignUpPage extends StatelessWidget {
                       return null;
                     },
                     decoration: const InputDecoration(
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color:Colors.grey,width:2.0),
+                      ),
                       hintText: "Enter Password Again",
                     ),
                   ),
@@ -76,6 +87,10 @@ class SignUpPage extends StatelessWidget {
                       child: const Text("Register")),
                   ElevatedButton(
                       onPressed: () {
+                        _username.clear();
+                        _email.clear();
+                        _password.clear();
+
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) => login()));
                       },

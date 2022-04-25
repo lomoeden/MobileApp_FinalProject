@@ -26,6 +26,8 @@ class _HomeState extends State<Home> {
   User? current_user = FirebaseAuth.instance.currentUser;
   final CollectionReference _username = FirebaseFirestore.instance.collection(
       "users");
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
   //
   // void getUsername(){
   //   _db.collection("user")
@@ -38,6 +40,36 @@ class _HomeState extends State<Home> {
   //   });
   // }
 
+  Future<void> _logout() async{
+    await _auth.signOut();
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => login()));
+  }
+
+  createAlertDialog(BuildContext context){
+    TextEditingController customController = new TextEditingController();
+    return showDialog(context:context, builder: (context) {
+      return AlertDialog(
+        title: Text("Are you sure you want to logout?"),
+        actions:<Widget>[
+          MaterialButton(
+            elevation: 5.0,
+            child: Text('Yes'),
+            onPressed: _logout,
+          ),
+          MaterialButton(
+            elevation: 5.0,
+            child: Text('No'),
+            onPressed: (){
+              Navigator.pop(context);
+            },
+          )
+        ],
+      );
+    });
+  }
 
   TextEditingController textEditingController = new TextEditingController();
 
@@ -51,29 +83,56 @@ class _HomeState extends State<Home> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Recipe App"),
-        backgroundColor: const Color(0xff9e9e9e),
         actions: <Widget>[
-          IconButton(
-              icon: const Icon(
-                Icons.add,
-                color: Colors.white,
-              ),
-              onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(builder:
-                    (BuildContext context) => postRecipes()));
-              })],
+          Container(
+            height: 50,
+            child: Row(
+              children: [
+                Wrap(
+                  children: [
+                    IconButton(
+                        icon: const Icon(
+                          Icons.add,
+                          color: Colors.white,
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).push(MaterialPageRoute(builder:
+                              (BuildContext context) => postRecipes()));
+                        }),
+                    IconButton(
+                        icon: const Icon(
+                          Icons.logout,
+                          color: Colors.white,
+                        ),
+                        onPressed: () {
+                          createAlertDialog(context);
+                        }),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          // IconButton(
+          //     icon: const Icon(
+          //       Icons.add,
+          //       color: Colors.white,
+          //     ),
+          //     onPressed: () {
+          //       Navigator.of(context).push(MaterialPageRoute(builder:
+          //           (BuildContext context) => postRecipes()));
+          //     }),
+        ],
       ),
       body: Stack(
         children: <Widget>[
           Container(
-
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
             decoration: const BoxDecoration(
                 gradient: LinearGradient(
                     colors: [
-                      Color(0xff9e9e9e),
-                      Color(0xff9e9e9e)
+                      Colors.indigo,
+                      Colors.indigoAccent,
                     ],
                     begin: FractionalOffset.topRight,
                     end: FractionalOffset.bottomLeft)),
@@ -113,6 +172,9 @@ class _HomeState extends State<Home> {
                               enabledBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(color: Colors.white),
                               ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color:Colors.white,width:2.0),
+                              ),
                             ),
                           ),
                         ),
@@ -143,6 +205,7 @@ class _HomeState extends State<Home> {
                               } else {
                                 print("None");
                               }
+                              textEditingController.clear();
                             },
                             child: Container(
                               decoration: const BoxDecoration(
