@@ -218,11 +218,25 @@ class RecipieTile extends StatefulWidget {
 }
 
 class _RecipieTileState extends State<RecipieTile> {
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  String userId = FirebaseAuth.instance.currentUser!.uid;
+
   void _launchURL() async {
-    final Uri _url = Uri.parse('https://flutter.dev');
+    final Uri _url = Uri.parse(widget.url);
     if (!await launchUrl(_url)) throw 'Could not launch $_url';
   }
-  String userId = FirebaseAuth.instance.currentUser!.uid;
+
+  void _saveRecipe(String recipe_name) async {
+    await _db
+        .collection("users")
+        .doc(_auth.currentUser!.uid)
+        .collection("recipes")
+        .doc(Timestamp.now().millisecondsSinceEpoch.toString())
+        .set({
+      "recipe": recipe_name,
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -238,8 +252,8 @@ class _RecipieTileState extends State<RecipieTile> {
               children: <Widget>[
                 Image.network(
                   widget.imgUrl,
-                  height: 200,
-                  width: 200,
+                  height: 180,
+                  width: 180,
                   fit: BoxFit.cover,
                 ),
                 Container(
@@ -250,21 +264,55 @@ class _RecipieTileState extends State<RecipieTile> {
                       gradient: LinearGradient(
                           colors: [Colors.black54, Colors.white],
                           begin: FractionalOffset.centerRight,
-                          end: FractionalOffset.centerLeft)),
+                          end: FractionalOffset.centerLeft
+                      )),
                   child:
                   Padding(
                     padding: const EdgeInsets.all(5.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-
-                      children: <Widget>[
-                        Text(
-                          widget.title,
-                          style: const TextStyle(
-                            fontSize: 13,
-                            color: Colors.black54,
+                      children:[
+                        Container(
+                          height: 50,
+                          child: Row(
+                            children: [
+                              Wrap(
+                                // spacing: 5,
+                                children: [
+                                  IconButton(
+                                      icon: const Icon(
+                                        Icons.tag_faces,
+                                        color: Colors.black87,
+                                      ),
+                                      onPressed: () {
+                                        Navigator.of(context).push(MaterialPageRoute(builder:
+                                            (BuildContext context) => RatingDialog(recipe_name: widget.title, userId: userId,)));
+                                      }),
+                                  IconButton(
+                                      icon: const Icon(
+                                        Icons.save_alt,
+                                        color: Colors.black87,
+                                      ),
+                                      onPressed: () {
+                                        _saveRecipe(widget.title);
+                                        showDialog(context: context, builder: (BuildContext context){
+                                          return const AlertDialog(
+                                            content: Text("Saved Successfully!"),
+                                          );
+                                        });
+                                      }),
+                                ],
+                              )
+                            ],
                           ),
                         ),
+                        Text(
+                            widget.title,
+                            style: const TextStyle(
+                              fontSize: 13,
+                              color: Colors.black54,
+                            ),
+                          ),
                         Text(
                           widget.desc,
                           style: const TextStyle(
@@ -272,18 +320,9 @@ class _RecipieTileState extends State<RecipieTile> {
                             color: Colors.black54,
                           ),
                         ),
-                        IconButton(
-                            icon: const Icon(
-                              Icons.tag_faces,
-                              color: Colors.grey,
-                            ),
-                            onPressed: () {
-                              Navigator.of(context).push(MaterialPageRoute(builder:
-                                  (BuildContext context) => RatingDialog(recipe_name: widget.title, userId: userId,)));
-                            }),
+
                       ],
                     ),
-
                   ),
                 ),
               ],
