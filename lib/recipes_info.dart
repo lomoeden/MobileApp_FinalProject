@@ -6,19 +6,18 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:like_button/like_button.dart';
-import 'package:mobile_app_final_project/group_recipe.dart';
 import 'package:mobile_app_final_project/login.dart';
 import 'package:mobile_app_final_project/post_reicpes.dart';
 import 'package:mobile_app_final_project/rate.dart';
 import 'package:mobile_app_final_project/recipe_model.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class Home extends StatefulWidget {
+class recipe_info extends StatefulWidget {
   @override
-  _HomeState createState() => _HomeState();
+  _recipe_infoState createState() => _recipe_infoState();
 }
 
-class _HomeState extends State<Home> {
+class _recipe_infoState extends State<recipe_info> {
   List<RecipeModel> recipies = [];
   late String ingridients;
   bool _loading = false;
@@ -28,18 +27,6 @@ class _HomeState extends State<Home> {
   final CollectionReference _username = FirebaseFirestore.instance.collection(
       "users");
   final FirebaseAuth _auth = FirebaseAuth.instance;
-
-  //
-  // void getUsername(){
-  //   _db.collection("user")
-  //       // .doc(current_user!.uid)
-  //       .snapshots()
-  //       .listen((QuerySnapshot<Map<String, dynamic>> snapshot) {
-  //     snapshot.docs.map((QueryDocumentSnapshot doc) {
-  //       u.User.fromJson(doc.id, doc.data() as Map<String, dynamic>);
-  //     });
-  //   });
-  // }
 
   Future<void> _logout() async{
     await _auth.signOut();
@@ -73,6 +60,8 @@ class _HomeState extends State<Home> {
   }
 
   TextEditingController textEditingController = new TextEditingController();
+  final ScrollController _controllerOne = ScrollController();
+
 
   @override
   void initState() {
@@ -91,15 +80,6 @@ class _HomeState extends State<Home> {
               children: [
                 Wrap(
                   children: [
-                    IconButton(
-                        icon: const Icon(
-                          Icons.fastfood,
-                          color: Colors.white,
-                        ),
-                        onPressed: () {
-                          Navigator.of(context).push(MaterialPageRoute(builder:
-                              (BuildContext context) => group_recipe()));
-                        }),
                     IconButton(
                         icon: const Icon(
                           Icons.add,
@@ -223,7 +203,30 @@ class _HomeState extends State<Home> {
                                   ),
                                 ],
                               ),
-                            )),
+                              // child: Column(
+                              //     children: <Widget>[
+                              //       SizedBox(
+                              //           height: 100,
+                              //           child: Scrollbar(
+                              //             controller: _controllerOne,
+                              //             isAlwaysShown: true,
+                              //             child: GridView.builder(
+                              //               controller: _controllerOne,
+                              //               itemCount: 120,
+                              //               gridDelegate:
+                              //               const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
+                              //               itemBuilder: (BuildContext context, int index) {
+                              //                 return Center(
+                              //                   child: Text('item $index'),
+                              //                 );
+                              //               },
+                              //             ),
+                              //           )
+                              //       ),
+                              //     ]
+                              // )
+                            )
+                        ),
                       ],
                     ),
                   ),
@@ -371,12 +374,12 @@ class _RecipieTileState extends State<RecipieTile> {
                           ),
                         ),
                         Text(
-                            widget.title,
-                            style: const TextStyle(
-                              fontSize: 13,
-                              color: Colors.black54,
-                            ),
+                          widget.title,
+                          style: const TextStyle(
+                            fontSize: 13,
+                            color: Colors.black54,
                           ),
+                        ),
                         Text(
                           widget.desc,
                           style: const TextStyle(
@@ -384,7 +387,6 @@ class _RecipieTileState extends State<RecipieTile> {
                             color: Colors.black54,
                           ),
                         ),
-
                       ],
                     ),
                   ),

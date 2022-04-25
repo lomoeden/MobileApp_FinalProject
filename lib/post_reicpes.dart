@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_app_final_project/display_post.dart';
+import 'package:mobile_app_final_project/home.dart';
 import 'login.dart';
 import 'package:mobile_app_final_project/user.dart' as u;
 
@@ -21,6 +22,8 @@ class postRecipes extends StatelessWidget {
   final _image = TextEditingController();
   final _name = TextEditingController();
 
+
+
   // List<u.User> user = [];
   // void getUsername() {
   //   _db.collection('users')
@@ -35,9 +38,72 @@ class postRecipes extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
+    Future<void> _logout() async{
+      await _auth.signOut();
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => login()));
+    }
+
+    createAlertDialog(BuildContext context){
+      TextEditingController customController = new TextEditingController();
+      return showDialog(context:context, builder: (context) {
+        return AlertDialog(
+          title: Text("Are you sure you want to logout?"),
+          actions:<Widget>[
+            MaterialButton(
+              elevation: 5.0,
+              child: Text('Yes'),
+              onPressed: _logout,
+            ),
+            MaterialButton(
+              elevation: 5.0,
+              child: Text('No'),
+              onPressed: (){
+                Navigator.pop(context);
+              },
+            )
+          ],
+        );
+      });
+    }
+
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Post Your Recipes"),
+          // title: Text("Recipe App"),
+          actions: <Widget>[
+            Container(
+              height: 50,
+              child: Row(
+                children: [
+                  Wrap(
+                    children: [
+                      IconButton(
+                          icon: const Icon(
+                            Icons.home,
+                            color: Colors.white,
+                          ),
+                          onPressed: () {
+                            Navigator.of(context).push(MaterialPageRoute(builder:
+                                (BuildContext context) => Home()));
+                          }),
+                      IconButton(
+                          icon: const Icon(
+                            Icons.logout,
+                            color: Colors.white,
+                          ),
+                          onPressed: () {
+                            createAlertDialog(context);
+                          }),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
       ),
       body: Center(
         child:
