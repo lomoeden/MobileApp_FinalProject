@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:like_button/like_button.dart';
+import 'package:mobile_app_final_project/login.dart';
 import 'package:mobile_app_final_project/post_reicpes.dart';
 import 'package:mobile_app_final_project/rate.dart';
 import 'package:mobile_app_final_project/recipe_model.dart';
@@ -178,11 +179,11 @@ class _HomeState extends State<Home> {
                               backgroundColor: Colors.black54,
                               leading: LikeButton(
                                 size: 30,
-                                // likeCount: 0,
+                                likeCount: 0,
                                 likeBuilder: (bool like) {
                                   return const Icon(
                                     Icons.thumb_up,
-                                    color: Colors.red,
+                                    color: Colors.grey,
                                     // ),
                                   );
                                 },
@@ -237,8 +238,8 @@ class _RecipieTileState extends State<RecipieTile> {
               children: <Widget>[
                 Image.network(
                   widget.imgUrl,
-                  height: 150,
-                  width: 150,
+                  height: 200,
+                  width: 200,
                   fit: BoxFit.cover,
                 ),
                 Container(
@@ -252,9 +253,10 @@ class _RecipieTileState extends State<RecipieTile> {
                           end: FractionalOffset.centerLeft)),
                   child:
                   Padding(
-                    padding: const EdgeInsets.all(10.0),
+                    padding: const EdgeInsets.all(5.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
+
                       children: <Widget>[
                         Text(
                           widget.title,
@@ -281,6 +283,7 @@ class _RecipieTileState extends State<RecipieTile> {
                             }),
                       ],
                     ),
+
                   ),
                 ),
               ],
