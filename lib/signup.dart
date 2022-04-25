@@ -11,6 +11,7 @@ class SignUpPage extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
   var _email = TextEditingController();
   var _password = TextEditingController();
+  var _repassword = TextEditingController();
   var _username = TextEditingController();
 
   @override
@@ -62,6 +63,7 @@ class SignUpPage extends StatelessWidget {
                     ),
                   ),
                   TextFormField(
+                    controller: _repassword,
                     obscureText: true,
                     validator: (String? value) {
                       if (value != _password.text) {
@@ -81,15 +83,15 @@ class SignUpPage extends StatelessWidget {
                         if (_formKey.currentState!.validate()) {
                           _register(context);
                         }
-                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                            content: Text("Your account has been registered successfully!")));
+                        // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        //     content: Text("Your account has been registered successfully!")));
                       },
                       child: const Text("Register")),
                   ElevatedButton(
                       onPressed: () {
-                        _username.clear();
-                        _email.clear();
-                        _password.clear();
+                        // _username.clear();
+                        // _email.clear();
+                        // _password.clear();
 
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) => login()));
@@ -122,9 +124,15 @@ class SignUpPage extends StatelessWidget {
         "email": _email.text,
         "registration_datetime":Timestamp.now()
       });
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text("Your account has been registered successfully!")));
     } on FirebaseException catch (e) {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text(e.message ?? "Unknown Error")));
     }
+    _username.clear();
+    _email.clear();
+    _password.clear();
+    _repassword.clear();
   }
 }

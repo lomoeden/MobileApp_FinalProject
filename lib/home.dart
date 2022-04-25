@@ -112,15 +112,6 @@ class _HomeState extends State<Home> {
               ],
             ),
           ),
-          // IconButton(
-          //     icon: const Icon(
-          //       Icons.add,
-          //       color: Colors.white,
-          //     ),
-          //     onPressed: () {
-          //       Navigator.of(context).push(MaterialPageRoute(builder:
-          //           (BuildContext context) => postRecipes()));
-          //     }),
         ],
       ),
       body: Stack(
