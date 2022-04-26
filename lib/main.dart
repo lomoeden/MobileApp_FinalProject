@@ -1,11 +1,9 @@
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_app_final_project/group_recipe.dart';
 
 import 'package:mobile_app_final_project/login.dart';
 import 'package:mobile_app_final_project/recipes_info.dart';
-
 
 void main() async {
   WidgetsFlutterBinding();
@@ -19,6 +17,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Recipes App',
       theme: ThemeData(
         primarySwatch: Colors.indigo,
