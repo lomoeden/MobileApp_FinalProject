@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -16,53 +15,79 @@ class login extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text("Login"),
+        //backgroundColor: Colors.black,
+        /*appBar: AppBar(
+          title: Container(
+            child: Text("Login"),
+            height: 10,
+          ),
           // backgroundColor: const Color(0xff9e9e9e),
-        ),
+        ),*/
         body: Center(
-          child: Form(
-              key: _formKey,
-              child: Column(
-                children: [
-                  TextFormField(
-                    controller: _email,
-                    decoration: const InputDecoration(
-                      hintText: "Enter Email",
-                    ),
+      child: Form(
+          key: _formKey,
+          child: Container(
+            height: 600,
+            width: 300,
+            padding: EdgeInsets.only(top: 150),
+            child: Column(
+              children: [
+                Text(
+                  "Welcome",
+                  style: TextStyle(
+                    fontSize: 20,
                   ),
-                  TextFormField(
-                    controller: _password,
-                    obscureText: true,
-                    validator: (String? value) {
-                      if (value == null) {
-                        return "Password cannot be empty";
-                      } else if (value.length < 2) {
-                        return "Wrong password";
+                ),
+                TextFormField(
+                  controller: _email,
+                  decoration: const InputDecoration(
+                    hintText: "Enter Email",
+                  ),
+                ),
+                TextFormField(
+                  controller: _password,
+                  obscureText: true,
+                  validator: (String? value) {
+                    if (value == null) {
+                      return "Password cannot be empty";
+                    } else if (value.length < 2) {
+                      return "Wrong password";
+                    }
+                  },
+                  decoration: const InputDecoration(
+                    hintText: "Enter Password",
+                  ),
+                ),
+                SizedBox(
+                  height: 40,
+                ),
+                Container(
+                  alignment: Alignment.centerRight,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        _login(context);
                       }
                     },
-                    decoration: const InputDecoration(
-                      hintText: "Enter Password",
-                    ),
+                    child: const Text("Login"),
                   ),
-                  ElevatedButton(
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          _login(context);
-                        }
-                      },
-                      child: const Text("Login")),
-                  ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => SignUpPage()));
-                      },
-                      child: const Text("Register")),
-                ],
-              )),
-        ));
+                ),
+                SizedBox(
+                  height: 150,
+                ),
+                Text('Don\'t have an account?'),
+                ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => SignUpPage()));
+                    },
+                    child: const Text("Register")),
+              ],
+            ),
+          )),
+    ));
   }
 
   void _login(BuildContext context) async {
@@ -77,9 +102,6 @@ class login extends StatelessWidget {
       }
       return;
     }
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => Home()));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
   }
 }
