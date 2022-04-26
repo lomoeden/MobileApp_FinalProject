@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:mobile_app_final_project/login.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class RecipeView extends StatefulWidget {
@@ -17,24 +19,80 @@ class _RecipeViewState extends State<RecipeView> {
 
   final Completer<WebViewController> _controller =
   Completer<WebViewController>();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   late String finalUrl ;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     finalUrl = widget.postUrl;
     if(widget.postUrl.contains('http://')){
       finalUrl = widget.postUrl.replaceAll("http://","https://");
       print(finalUrl + "this is final url");
     }
-
   }
+
+  Future<void> _logout() async{
+    await _auth.signOut();
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => login()));
+  }
+
+  createAlertDialog(BuildContext context){
+    TextEditingController customController = new TextEditingController();
+    return showDialog(context:context, builder: (context) {
+      return AlertDialog(
+        title: Text("Are you sure you want to logout?"),
+        actions:<Widget>[
+          MaterialButton(
+            elevation: 5.0,
+            child: Text('Yes'),
+            onPressed: _logout,
+          ),
+          MaterialButton(
+            elevation: 5.0,
+            child: Text('No'),
+            onPressed: (){
+              Navigator.pop(context);
+            },
+          )
+        ],
+      );
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: AppBar(
+          title: const Text("Post Your Recipes"),
+          // title: Text("Recipe App"),
+          actions: <Widget>[
+            Container(
+              height: 50,
+              child: Row(
+                children: [
+                  Wrap(
+                    children: [
+                      IconButton(
+                          icon: const Icon(
+                            Icons.logout,
+                            color: Colors.white,
+                          ),
+                          onPressed: () {
+                            createAlertDialog(context);
+                          }),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
         body: Container(
           child: Column(
             children: <Widget>[
@@ -54,20 +112,6 @@ class _RecipeViewState extends State<RecipeView> {
                       ? MainAxisAlignment.start
                       : MainAxisAlignment.center,
                   children: const <Widget>[
-                    Text(
-                      "AppGuy",
-                      style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.white,
-                          fontFamily: 'Overpass'),
-                    ),
-                    Text(
-                      "Recipes",
-                      style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.blue,
-                          fontFamily: 'Overpass'),
-                    )
                   ],
                 ),
               ),

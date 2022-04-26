@@ -70,6 +70,7 @@ class login extends StatelessWidget {
                       }
                     },
                     child: const Text("Login"),
+
                   ),
                 ),
                 SizedBox(
@@ -102,6 +103,13 @@ class login extends StatelessWidget {
       }
       return;
     }
-    Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
+
+    _email.clear();
+    _password.clear();
+
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => Home()));
   }
 }
